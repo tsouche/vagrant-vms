@@ -1,0 +1,35 @@
+# Create a clean Ubuntu 18.04.3 Desktop
+
+HOSTNAME="ubuntu"       # Host name
+CPU=2                   # CPUs number
+MEM=4096                # memory size
+IP="192.168.0.100"      # ip@
+
+Vagrant.configure("2") do |config|
+
+  # Specifies the base boxe: bento - Ubuntu Server 18.04.3 LTS
+  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.box_version = "201912.03.0"
+  config.vm.box_check_update = false
+
+  # configures basic details
+  config.vm.hostname = "#{HOSTNAME}"
+  config.vm.base_address = "#{IP}"
+  #config.vm.network 'public_network', ip: "#{IP}"
+  #config.vm.network 'private_network', ip: "#{IP}"
+  #config.vm.synced_folder "./shared", "/shared", create: true
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.linked_clone = true
+    vb.cpus = CPU
+    vb.memory = MEM
+    #vb.customize ["modifyvm", :id, "--cpuexecutioncap", "70"]
+    #vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+  end
+
+  # apply the initial configuration script to prepare the VM:
+  #    - add a user called 'thierry'
+  #    - install git, curl, docker...
+  config.vm.provision :shell, path: "./bootstrap.sh"
+
+end
