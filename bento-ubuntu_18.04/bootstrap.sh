@@ -4,7 +4,7 @@
 
 # install git, curl and docker
 apt-get update
-apt-get upgrade
+apt-get upgrade -y
 #apt-get -y install git curl
 
 # install docker
